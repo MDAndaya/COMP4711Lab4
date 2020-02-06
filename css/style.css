@@ -16,10 +16,11 @@ html {
 }
 
 #top > input {
-    width: 70%;
+    width: inherit;
 }
 
 #top > button {
+    display: inline-block;
     font-family: 'Roboto', sans-serif;
     text-decoration: none;
     border: none;

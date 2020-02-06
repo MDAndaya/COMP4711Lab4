@@ -4,6 +4,8 @@
 let container = document.getElementById("flex-container");
 container.innerHTML = localStorage.getItem('container');
 
+clearSearch();
+
 function createArtistParams() {
 
     if (document.querySelector('#add-div') != null) {
@@ -99,4 +101,64 @@ function deleteNode(child) {
         localStorage.clear();
     }
 
+}
+
+function search() {
+
+    // element to search through
+    let element = document.getElementById("flex-container");
+
+    // name to search for
+    let targetName = document.getElementById("search-bar").value;
+    console.log("searching for " + targetName);
+
+    // if target is empty, clear all filters
+    if (targetName === "") {
+        clearSearch();
+        return;
+    }
+
+    NodeList.prototype.forEach = Array.prototype.forEach;
+    var children = element.childNodes;
+    children.forEach(function (item) {
+
+        let name;
+
+        // console.log(item);
+        try {
+
+            name = item.getElementsByClassName("description")[0].getElementsByTagName("strong")[0].innerHTML;
+            console.log(name);
+
+            console.log("target name: " + targetName + ", " + "name: " + name);
+
+            if (name.includes(targetName)) {
+                item.style.display = "flex";
+            } else {
+                item.style.display = "none";
+            }
+        } catch (error) {
+        }
+
+
+
+    });
+}
+
+
+function clearSearch() {
+
+    console.log("clearing");
+
+    // element to search through
+    let element = document.getElementById("flex-container");
+
+    NodeList.prototype.forEach = Array.prototype.forEach;
+    var children = element.childNodes;
+    children.forEach(function (item) {
+        try {
+            item.style.display = "flex";
+        } catch (error) {
+        }
+    });
 }
