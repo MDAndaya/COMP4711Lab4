@@ -33,6 +33,14 @@ html {
     margin: 10px;
 }
 
+#add-div > .add-button {
+    display: inline-block;
+    font-family: 'Roboto', sans-serif;
+    text-decoration: none;
+    border: none;
+    padding: 10px;
+}
+
 .hover:hover {
     background-color: lightgray;
 }

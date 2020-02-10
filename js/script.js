@@ -1,11 +1,23 @@
 
 // localStorage.clear();
 
-let container = document.getElementById("flex-container");
-container.innerHTML = localStorage.getItem('container');
+/**
+ * Pull array of artists from localstorage.
+ */
+var artists = JSON.parse(localStorage.getItem('artists'));
+
+if (artists) {
+    for (var i = 0; i < artists.length; i++) {
+        let a = artists[i];
+        addArtist(a.name, a.about, a.imageurl);
+    }
+}
 
 clearSearch();
 
+/**
+ * Creates input boxes and input button.
+ */
 function createArtistParams() {
 
     if (document.querySelector('#add-div') != null) {
@@ -33,8 +45,8 @@ function createArtistParams() {
     let addButton = document.createElement("input");
     addButton.setAttribute("type", "button");
     addButton.setAttribute("value", "Add")
-    addButton.setAttribute("class", "field");
-    addButton.setAttribute("onclick", "addArtist()");
+    addButton.setAttribute("class", "add-button");
+    addButton.setAttribute("onclick", "addArtistButton()");
 
     addDiv.appendChild(fieldName);
     addDiv.appendChild(fieldAbout);
@@ -44,10 +56,36 @@ function createArtistParams() {
     let top = document.getElementById("top").appendChild(addDiv);
 }
 
-function addArtist() {
+/**
+ * Adds artist to artists array saved to local storage and creates card to
+ * add to container.
+ */
+function addArtistButton() {
     let name = document.getElementById("field-name").value;
     let about = document.getElementById("field-about").value;
     let imageurl = document.getElementById("field-image").value;
+
+    if (name != "" &&
+        about != "" &&
+        imageurl != "") {
+
+        // Adds artists to list.
+        addArtist(name, about, imageurl);
+        // Saves artist details to local storage.
+        saveArtist(name, about, imageurl);
+        document.querySelector('#add-div').remove();
+    }
+
+
+}
+
+/**
+ * 
+ * @param {Name of artist} name 
+ * @param {About the artist} about 
+ * @param {URL for artist image} imageurl 
+ */
+function addArtist(name, about, imageurl) {
 
     let card = document.createElement("div");
     card.setAttribute("class", "flex-item hover");
@@ -85,22 +123,62 @@ function addArtist() {
     card.appendChild(delButton);
 
     let container = document.getElementById("flex-container").appendChild(card);
-    document.querySelector('#add-div').remove();
+}
 
-    container = document.getElementById("flex-container");
-    localStorage.setItem('container', container.innerHTML);
+/**
+ * Saves artist to local storage.
+ * @param {*} name 
+ * @param {*} about 
+ * @param {*} imageurl 
+ */
+function saveArtist(name, about, imageurl) {
 
+    let a = { "name": name, "about": about, "imageurl": imageurl };
+    console.log(a);
+
+    var artists = JSON.parse(localStorage.getItem('artists'));
+    if (artists) {
+        artists.push(a);
+    } else {
+        artists = [];
+        artists.push(a);
+    }
+
+    localStorage.setItem('artists', JSON.stringify(artists));
 }
 
 function deleteNode(child) {
-    child.parentNode.remove();
-    let container = document.getElementById("flex-container");
-    if (container) {
-        localStorage.setItem('container', container.innerHTML);
-    } else {
-        localStorage.clear();
-    }
 
+    let image = child.parentNode.firstChild;
+    let imageurl = image.getAttributeNode("src").value;
+    console.log(imageurl);
+
+    let description = image.nextSibling;
+    let name = description.getElementsByTagName("strong")[0].textContent;
+    console.log(name);
+
+    let about = description.getElementsByTagName("span")[0].textContent;
+    console.log(about);
+
+    var artists = JSON.parse(localStorage.getItem('artists'));
+
+    for (var i = 0; i < artists.length; i++) {
+        let a = artists[i];
+
+        if (a.name == name &&
+            a.about == about) {
+
+            artists.splice(i, 1);
+            console.log("deleted " + name);
+            break;
+
+        } else {
+            console.log("not found");
+        }
+    }
+    localStorage.setItem('artists', JSON.stringify(artists));
+
+    child.parentNode.remove();
 }
 
 function search() {
@@ -124,10 +202,9 @@ function search() {
 
         let name;
 
-        // console.log(item);
         try {
 
-            name = item.getElementsByClassName("description")[0].getElementsByTagName("strong")[0].innerHTML;
+            name = item.getElementsByClassName("description")[0].getElementsByTagName("strong")[0].textContent;
             console.log(name);
 
             console.log("target name: " + targetName + ", " + "name: " + name);
@@ -137,14 +214,10 @@ function search() {
             } else {
                 item.style.display = "none";
             }
-        } catch (error) {
-        }
-
-
+        } catch (error) { }
 
     });
 }
-
 
 function clearSearch() {
 
@@ -158,7 +231,6 @@ function clearSearch() {
     children.forEach(function (item) {
         try {
             item.style.display = "flex";
-        } catch (error) {
-        }
+        } catch (error) { }
     });
 }
