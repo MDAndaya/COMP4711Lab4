@@ -209,7 +209,7 @@ function search() {
 
             console.log("target name: " + targetName + ", " + "name: " + name);
 
-            if (name.includes(targetName)) {
+            if (name.toLowerCase().includes(targetName.toLowerCase())) {
                 item.style.display = "flex";
             } else {
                 item.style.display = "none";
