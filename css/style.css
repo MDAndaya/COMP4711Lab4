@@ -27,10 +27,14 @@ html {
     padding: 10px;
 }
 
-#top > #add-div {
+#add-div {
     display: flex;
     flex-direction: column;
     margin: 10px;
+}
+
+#add-div > * {
+    margin: 2px;
 }
 
 #add-div > .add-button {
@@ -39,6 +43,9 @@ html {
     text-decoration: none;
     border: none;
     padding: 10px;
+    text-align: center;
+    margin: auto;
+    width: 75px;
 }
 
 .hover:hover {
