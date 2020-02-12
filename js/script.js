@@ -150,7 +150,6 @@ function saveAllArtists() {
 
     let artists = [];
 
-    NodeList.prototype.forEach = Array.prototype.forEach;
     var children = element.childNodes;
     for (let i = 1; i < children.length; i++) {
 
@@ -191,8 +190,6 @@ function search() {
         clearSearch();
         return;
     }
-
-    NodeList.prototype.forEach = Array.prototype.forEach;
     var children = element.childNodes;
     for (let i = 1; i < children.length; i++) {
 
@@ -221,11 +218,9 @@ function clearSearch() {
     // element to search through
     let element = document.getElementById("flex-container");
 
-    NodeList.prototype.forEach = Array.prototype.forEach;
     var children = element.childNodes;
-    children.forEach(function (item) {
-        try {
-            item.style.display = "flex";
-        } catch (error) { }
-    });
+    for (let i = 1; i < children.length; i++) {
+        let item = children[i];
+        item.style.display = "flex";
+    }
 }
