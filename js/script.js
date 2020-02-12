@@ -4,9 +4,7 @@
 /**
  * Pull array of artists from localstorage.
  */
-var artists = JSON.parse(localStorage.getItem('artists'));
-
-if (artists) {
+if (artists = JSON.parse(localStorage.getItem('artists'))) {
     for (var i = 0; i < artists.length; i++) {
         let a = artists[i];
         addArtist(a.name, a.about, a.imageurl);
@@ -71,12 +69,9 @@ function addArtistButton() {
 
         // Adds artists to list.
         addArtist(name, about, imageurl);
-        // Saves artist details to local storage.
-        saveArtist(name, about, imageurl);
+
         document.querySelector('#add-div').remove();
     }
-
-
 }
 
 /**
@@ -123,6 +118,7 @@ function addArtist(name, about, imageurl) {
     card.appendChild(delButton);
 
     let container = document.getElementById("flex-container").appendChild(card);
+    saveAllArtists();
 }
 
 /**
@@ -147,38 +143,38 @@ function saveArtist(name, about, imageurl) {
     localStorage.setItem('artists', JSON.stringify(artists));
 }
 
-function deleteNode(child) {
+function saveAllArtists() {
 
-    let image = child.parentNode.firstChild;
-    let imageurl = image.getAttributeNode("src").value;
-    console.log(imageurl);
+    // element to search through
+    let element = document.getElementById("flex-container");
 
-    let description = image.nextSibling;
-    let name = description.getElementsByTagName("strong")[0].textContent;
-    console.log(name);
+    let artists = [];
 
-    let about = description.getElementsByTagName("span")[0].textContent;
-    console.log(about);
+    NodeList.prototype.forEach = Array.prototype.forEach;
+    var children = element.childNodes;
+    for (let i = 1; i < children.length; i++) {
 
-    var artists = JSON.parse(localStorage.getItem('artists'));
+        let item = children[i];
+        console.log(item);
+        let name;
+        let about;
+        let imageurl;
 
-    for (var i = 0; i < artists.length; i++) {
-        let a = artists[i];
+        name = item.getElementsByClassName("description")[0].getElementsByTagName("strong")[0].textContent;
+        about = item.getElementsByClassName("description")[0].getElementsByTagName("span")[0].textContent;
+        imageurl = item.getElementsByTagName("img")[0].getAttributeNode("src").value;
 
-        if (a.name == name &&
-            a.about == about) {
+        let a = { "name": name, "about": about, "imageurl": imageurl };
+        artists.push(a);
 
-            artists.splice(i, 1);
-            console.log("deleted " + name);
-            break;
-
-        } else {
-            console.log("not found");
-        }
     }
-    localStorage.setItem('artists', JSON.stringify(artists));
 
+    localStorage.setItem('artists', JSON.stringify(artists));
+}
+
+function deleteNode(child) {
     child.parentNode.remove();
+    saveAllArtists();
 }
 
 function search() {
@@ -198,25 +194,24 @@ function search() {
 
     NodeList.prototype.forEach = Array.prototype.forEach;
     var children = element.childNodes;
-    children.forEach(function (item) {
+    for (let i = 1; i < children.length; i++) {
 
+        let item = children[i];
+
+        console.log(item);
         let name;
 
-        try {
+        name = item.getElementsByClassName("description")[0].getElementsByTagName("strong")[0].textContent;
+        console.log(name);
 
-            name = item.getElementsByClassName("description")[0].getElementsByTagName("strong")[0].textContent;
-            console.log(name);
+        console.log("target name: " + targetName + ", " + "found: " + name);
 
-            console.log("target name: " + targetName + ", " + "name: " + name);
-
-            if (name.toLowerCase().includes(targetName.toLowerCase())) {
-                item.style.display = "flex";
-            } else {
-                item.style.display = "none";
-            }
-        } catch (error) { }
-
-    });
+        if (name.toLowerCase().includes(targetName.toLowerCase())) {
+            item.style.display = "flex";
+        } else {
+            item.style.display = "none";
+        }
+    }
 }
 
 function clearSearch() {
