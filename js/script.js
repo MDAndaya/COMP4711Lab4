@@ -121,27 +121,6 @@ function addArtist(name, about, imageurl) {
     saveAllArtists();
 }
 
-/**
- * Saves artist to local storage.
- * @param {*} name 
- * @param {*} about 
- * @param {*} imageurl 
- */
-function saveArtist(name, about, imageurl) {
-
-    let a = { "name": name, "about": about, "imageurl": imageurl };
-    console.log(a);
-
-    var artists = JSON.parse(localStorage.getItem('artists'));
-    if (artists) {
-        artists.push(a);
-    } else {
-        artists = [];
-        artists.push(a);
-    }
-
-    localStorage.setItem('artists', JSON.stringify(artists));
-}
 
 function saveAllArtists() {
 
@@ -154,7 +133,6 @@ function saveAllArtists() {
     for (let i = 1; i < children.length; i++) {
 
         let item = children[i];
-        console.log(item);
         let name;
         let about;
         let imageurl;
@@ -165,7 +143,6 @@ function saveAllArtists() {
 
         let a = { "name": name, "about": about, "imageurl": imageurl };
         artists.push(a);
-
     }
 
     localStorage.setItem('artists', JSON.stringify(artists));
@@ -183,7 +160,6 @@ function search() {
 
     // name to search for
     let targetName = document.getElementById("search-bar").value;
-    console.log("searching for " + targetName);
 
     // if target is empty, clear all filters
     if (targetName === "") {
@@ -195,11 +171,9 @@ function search() {
 
         let item = children[i];
 
-        console.log(item);
         let name;
 
         name = item.getElementsByClassName("description")[0].getElementsByTagName("strong")[0].textContent;
-        console.log(name);
 
         console.log("target name: " + targetName + ", " + "found: " + name);
 
